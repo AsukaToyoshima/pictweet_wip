@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import in.tech_camp.pictweet.costom_user.CustomUserDetail;
+import in.tech_camp.pictweet.custom_user.CustomUserDetail;
 import in.tech_camp.pictweet.entity.UserEntity;
 import in.tech_camp.pictweet.repository.UserRepository;
 

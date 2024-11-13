@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import in.tech_camp.pictweet.costom_user.CustomUserDetail;
+import in.tech_camp.pictweet.custom_user.CustomUserDetail;
 import in.tech_camp.pictweet.entity.TweetEntity;
 import in.tech_camp.pictweet.form.TweetForm;
 import in.tech_camp.pictweet.form.CommentForm;

@@ -62,7 +62,7 @@ public class TweetDetailIntegrationTest {
     userEntity.setEmail(userForm.getEmail());
     userEntity.setNickname(userForm.getNickname());
     userEntity.setPassword(userForm.getPassword());
-    userService.createUser(userEntity);
+    userService.createUserWithEncryptedPassword(userEntity);
 
     tweetForm = TweetFormFactory.createTweet();
     tweetEntity = new TweetEntity();
@@ -71,7 +71,6 @@ public class TweetDetailIntegrationTest {
     tweetEntity.setText(tweetForm.getText());
     tweetRepository.insert(tweetEntity);
   }
-
 
   @Test
   public void ログインしたユーザーはツイート詳細ページに遷移してコメント投稿欄が表示される() throws Exception {
@@ -147,5 +146,4 @@ public class TweetDetailIntegrationTest {
     mockMvc.perform(get("/tweets/{tweetId}", tweetEntity.getId()))
         .andExpect(content().string(containsString("コメントの投稿には新規登録/ログインが必要です")));
   }
-
 }

@@ -1,4 +1,4 @@
-package in.tech_camp.pictweet.costom_user;
+package in.tech_camp.pictweet.custom_user;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -7,7 +7,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import in.tech_camp.pictweet.entity.UserEntity;
-
 import lombok.Data;
 
 @Data

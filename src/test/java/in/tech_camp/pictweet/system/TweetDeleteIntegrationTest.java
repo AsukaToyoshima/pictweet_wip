@@ -72,14 +72,14 @@ public class TweetDeleteIntegrationTest {
     userEntity1.setEmail(userForm1.getEmail());
     userEntity1.setNickname(userForm1.getNickname());
     userEntity1.setPassword(userForm1.getPassword());
-    userService.createUser(userEntity1);
+    userService.createUserWithEncryptedPassword(userEntity1);
 
     userForm2 = UserFormFactory.createUser();
     userEntity2 = new UserEntity();
     userEntity2.setEmail(userForm2.getEmail());
     userEntity2.setNickname(userForm2.getNickname());
     userEntity2.setPassword(userForm2.getPassword());
-    userService.createUser(userEntity2);
+    userService.createUserWithEncryptedPassword(userEntity2);
 
     tweetForm1 = TweetFormFactory.createTweet();
     tweetEntity1 = new TweetEntity();
@@ -122,8 +122,8 @@ public class TweetDeleteIntegrationTest {
       assertNotNull(deleteButtonElement);
       assertEquals("削除", deleteButtonElement.val());
 
-      List<TweetEntity> tweetsBeforeDeletion = tweetRepository.findAll();
-      Integer initialCount = tweetsBeforeDeletion.size();
+      List<TweetEntity> tweetsListBeforeDeletion = tweetRepository.findAll();
+      Integer initialCount = tweetsListBeforeDeletion.size();
 
       // 投稿を削除する
       mockMvc.perform(post("/tweets/{tweetId}/delete",tweetEntity1.getId()).session(session)
@@ -132,8 +132,8 @@ public class TweetDeleteIntegrationTest {
           .andExpect(redirectedUrl("/"));
 
       // 投稿を削除するとレコードの数が1減ることを確認する
-      List<TweetEntity> tweetAfterDeletion = tweetRepository.findAll();
-      Integer afterCount = tweetAfterDeletion.size();
+      List<TweetEntity> tweetsListAfterDeletion = tweetRepository.findAll();
+      Integer afterCount = tweetsListAfterDeletion.size();
       assertEquals(initialCount - 1, afterCount);
 
       // トップページにはツイート1の内容が存在しないことを確認する（画像）

@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import in.tech_camp.pictweet.entity.UserEntity;
 import in.tech_camp.pictweet.repository.UserRepository;
-
 import lombok.AllArgsConstructor;
 
 @Service
@@ -15,10 +14,13 @@ public class UserService {
 
   private final PasswordEncoder passwordEncoder;
 
-  public void createUser(UserEntity userEntity){
-    String password = userEntity.getPassword();
-    String encodedPassword = passwordEncoder.encode(password);
+  public void createUserWithEncryptedPassword(UserEntity userEntity) {
+    String encodedPassword = encodePassword(userEntity.getPassword());
     userEntity.setPassword(encodedPassword);
     userRepository.insert(userEntity);
+  }
+
+  private String encodePassword(String password) {
+    return passwordEncoder.encode(password);
   }
 }

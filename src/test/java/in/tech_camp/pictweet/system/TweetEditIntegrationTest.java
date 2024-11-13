@@ -72,14 +72,14 @@ public class TweetEditIntegrationTest {
     userEntity1.setEmail(userForm1.getEmail());
     userEntity1.setNickname(userForm1.getNickname());
     userEntity1.setPassword(userForm1.getPassword());
-    userService.createUser(userEntity1);
+    userService.createUserWithEncryptedPassword(userEntity1);
 
     userForm2 = UserFormFactory.createUser();
     userEntity2 = new UserEntity();
     userEntity2.setEmail(userForm2.getEmail());
     userEntity2.setNickname(userForm2.getNickname());
     userEntity2.setPassword(userForm2.getPassword());
-    userService.createUser(userEntity2);
+    userService.createUserWithEncryptedPassword(userEntity2);
 
     tweetForm1 = TweetFormFactory.createTweet();
     tweetEntity1 = new TweetEntity();
@@ -127,8 +127,8 @@ public class TweetEditIntegrationTest {
           .andExpect(content().string(containsString(tweetEntity1.getText())))
           .andExpect(content().string(containsString(tweetEntity1.getImage())));
 
-      List<TweetEntity> tweetBeforeDeletion = tweetRepository.findAll();
-      Integer initialCount = tweetBeforeDeletion.size();
+      List<TweetEntity> tweetsListBeforeEdit = tweetRepository.findAll();
+      Integer initialCount = tweetsListBeforeEdit.size();
 
       // 投稿内容を編集する
       mockMvc.perform(post("/tweets/{tweetId}/update" ,tweetEntity1.getId()).session(session)
@@ -139,8 +139,8 @@ public class TweetEditIntegrationTest {
           .andExpect(redirectedUrl("/"));
 
       // 編集してもtweetsテーブルのレコードの数が変わらないことを確認する
-      List<TweetEntity> tweetAfterDeletion = tweetRepository.findAll();
-      Integer afterCount = tweetAfterDeletion.size();
+      List<TweetEntity> tweetsListAfterEdit = tweetRepository.findAll();
+      Integer afterCount = tweetsListAfterEdit.size();
       assertEquals(initialCount, afterCount);
 
       // トップページには先ほど変更した内容のツイートが存在することを確認する（画像）

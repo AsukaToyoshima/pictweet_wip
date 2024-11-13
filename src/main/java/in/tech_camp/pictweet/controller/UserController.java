@@ -60,7 +60,7 @@ public class UserController {
     userEntity.setPassword(userForm.getPassword());
 
     try {
-      userService.createUser(userEntity);
+      userService.createUserWithEncryptedPassword(userEntity);
     } catch (Exception e) {
       System.out.println("エラー：" + e);
       return "redirect:/";
@@ -89,6 +89,6 @@ public class UserController {
 
     model.addAttribute("nickname", user.getNickname());
     model.addAttribute("tweets", tweets);
-    return "users/detail";
+    return "users/mypage";
   }
 }

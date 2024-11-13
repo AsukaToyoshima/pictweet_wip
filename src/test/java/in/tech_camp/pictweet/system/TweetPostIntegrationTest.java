@@ -66,7 +66,7 @@ public class TweetPostIntegrationTest {
     userEntity.setEmail(userForm.getEmail());
     userEntity.setNickname(userForm.getNickname());
     userEntity.setPassword(userForm.getPassword());
-    userService.createUser(userEntity);
+    userService.createUserWithEncryptedPassword(userEntity);
 
     tweetForm = TweetFormFactory.createTweet();
   }
@@ -78,8 +78,8 @@ public class TweetPostIntegrationTest {
       // ログインする
       MvcResult loginResult = mockMvc.perform(post("/login")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .param("email", userEntity.getEmail())
-            .param("password", userEntity.getPassword())
+            .param("email", userForm.getEmail())
+            .param("password", userForm.getPassword())
             .with(csrf()))
             .andReturn();
 
@@ -96,8 +96,8 @@ public class TweetPostIntegrationTest {
           .andExpect(status().isOk())
           .andExpect(view().name("tweets/new"));
 
-      List<TweetEntity> tweetBeforeDeletion = tweetRepository.findAll();
-      Integer initialCount = tweetBeforeDeletion.size();
+      List<TweetEntity> tweetsListBeforePost = tweetRepository.findAll();
+      Integer initialCount = tweetsListBeforePost.size();
 
        // フォームに情報を入力する
       mockMvc.perform(post("/tweets").session(session)
@@ -108,8 +108,8 @@ public class TweetPostIntegrationTest {
           .andExpect(redirectedUrl("/"));
 
       // 送信するとTweetテーブルのレコード数が1上がることを確認する
-      List<TweetEntity> tweetAfterDeletion = tweetRepository.findAll();
-      Integer afterCount = tweetAfterDeletion.size();
+      List<TweetEntity> tweetsListAfterPost = tweetRepository.findAll();
+      Integer afterCount = tweetsListAfterPost.size();
       assertEquals(initialCount + 1, afterCount);
 
       // トップページには先ほど投稿した内容のツイートが存在することを確認する（画像）
@@ -124,7 +124,7 @@ public class TweetPostIntegrationTest {
       // トップページには先ほど投稿した内容のツイートが存在することを確認する（テキスト）
       mockMvc.perform(get("/"))
           .andExpect(status().isOk())
-          .andExpect(content().string(containsString(tweetForm.getText())));    
+          .andExpect(content().string(containsString(tweetForm.getText())));
     }
   }
 
