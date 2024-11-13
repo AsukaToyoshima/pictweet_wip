@@ -2,22 +2,13 @@ package in.tech_camp.pictweet.system;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -26,20 +17,26 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import in.tech_camp.pictweet.PictweetApplication;
-import in.tech_camp.pictweet.entity.UserEntity;
 import in.tech_camp.pictweet.entity.TweetEntity;
-import in.tech_camp.pictweet.factory.UserFormFactory;
+import in.tech_camp.pictweet.entity.UserEntity;
 import in.tech_camp.pictweet.factory.TweetFormFactory;
-import in.tech_camp.pictweet.form.UserForm;
+import in.tech_camp.pictweet.factory.UserFormFactory;
 import in.tech_camp.pictweet.form.TweetForm;
-import in.tech_camp.pictweet.service.UserService;
-import static in.tech_camp.pictweet.support.LoginSupport.login;
+import in.tech_camp.pictweet.form.UserForm;
 import in.tech_camp.pictweet.repository.TweetRepository;
+import in.tech_camp.pictweet.service.UserService;
 
 @ActiveProfiles("test")
 @SpringBootTest(classes = PictweetApplication.class)
@@ -77,6 +74,14 @@ public class TweetPostIntegrationTest {
     @Test
     public void ログインしたユーザーは新規投稿できる() throws Exception {
       // ログインする
+      MvcResult loginResult = mockMvc.perform(post("/login")
+      .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+      .param("email", userForm.getEmail())
+      .param("password", userForm.getPassword())
+      .with(csrf()))
+      .andReturn();
+
+      MockHttpSession session  = (MockHttpSession)loginResult.getRequest().getSession();
       assertNotNull(session);
 
       // 新規投稿ページへのボタンがあることを確認する
