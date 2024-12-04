@@ -5,5 +5,5 @@ CREATE TABLE comments (
   tweet_id INT          NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (user_id)  REFERENCES users(id),
-  FOREIGN KEY (tweet_id) REFERENCES tweets(id)
+  FOREIGN KEY (tweet_id) REFERENCES tweets(id) ON DELETE CASCADE
 );
